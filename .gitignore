@@ -1,0 +1,5 @@
+.*swp
+data/
+build/
+*.swo
+tags
