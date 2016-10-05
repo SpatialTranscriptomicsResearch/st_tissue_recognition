@@ -1,5 +1,8 @@
-.*swp
 data/
 build/
-*.swo
 tags
+*.swo
+*.swp
+*.pyc
+*.egg*
+*.txt
