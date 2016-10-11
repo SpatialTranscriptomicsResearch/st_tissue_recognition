@@ -1,11 +1,12 @@
 import ctypes as ct
+import ctypes.util as ctu
 
 import numpy as np
 
 from . import utils
 
 
-LIB_FILE = ct.util.find_library("tissue-recognition")
+LIB_FILE = ctu.find_library("tissue-recognition")
 LIB_HANDLE = ct.cdll.LoadLibrary(LIB_FILE)
 
 if LIB_HANDLE is None:
