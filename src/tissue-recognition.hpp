@@ -9,14 +9,18 @@
 extern "C" {
 #endif
 
-void tr_recognize_tissue(uchar *img, uchar *msk, uchar *annotations,
-        int rows, int cols,
+typedef struct trImage {
+    uchar *data;
+    int rows, cols;
+} trImage;
+
+void tr_recognize_tissue(trImage img, trImage msk, trImage annotations,
         bool init_msk = false, const trOptions &opt = trOptions());
 
-uchar** tr_get_binary_mask(const uchar **mask);
+trImage tr_get_binary_mask(trImage mask);
 
-uchar** tr_downsample(uchar **img, double factor);
-uchar** tr_upsample(uchar **img, double factor);
+trImage tr_downsample(trImage img, double factor);
+trImage tr_upsample(trImage img, double factor);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -2,32 +2,35 @@
 
 #include "tissue-recognition.hpp"
 
-void tr_recognize_tissue(uchar *img, uchar *msk, uchar *annot,
-        int rows, int cols,
+void tr_recognize_tissue(trImage img, trImage msk, trImage annot,
         bool init_msk, const trOptions& opt) {
-    cv::Mat ocv_img(rows, cols, CV_8UC3, img);
+    cv::Mat ocv_img(img.rows, img.cols, CV_8UC3, img.data);
+    cv::Mat ocv_msk(msk.rows, msk.cols, CV_8UC1, msk.data);
+    cv::Mat ocv_annot(annot.rows, annot.cols, CV_8UC1, annot.data);
 
-    cv::Mat ocv_msk(rows, cols, CV_8UC1, msk);
     if(init_msk)
         tr::init_msk(ocv_img, ocv_msk);
-
-    cv::Mat ocv_annot;
-    if(annot != NULL)
-        ocv_annot = cv::Mat(rows, cols, CV_8UC1, annot);
 
     tr::recognize_tissue(ocv_img, ocv_msk, ocv_annot, opt);
 }
 
-/* FIXME: NOT IMPLEMENTED */
-uchar** tr_get_binary_mask(const uchar** msk) {
-    return NULL;
+trImage tr_get_binary_mask(trImage msk) {
+    cv::Mat ocv_msk(msk.rows, msk.cols, CV_8UC1, msk.data);
+    cv::Mat bin_msk = tr::get_binary_mask(ocv_msk);
+
+    return trImage{
+        .data = bin_msk.data, .rows = bin_msk.rows, .cols = bin_msk.cols};
 }
 
-/* FIXME: NOT IMPLEMENTED */
-uchar** tr_downsample(uchar** img, double factor) {
-    return NULL;
+trImage tr_downsample(trImage img, double factor) {
+    cv::Mat ocv_img(img.rows, img.cols, CV_8UC1, img.data);
+    cv::Mat res = tr::downsample(ocv_img, factor);
+
+    return trImage{.data = res.data, .rows = res.rows, .cols = res.cols};
 }
-/* FIXME: NOT IMPLEMENTED */
-uchar** tr_upsample(uchar** img, double factor) {
-    return NULL;
+trImage tr_upsample(trImage img, double factor) {
+    cv::Mat ocv_img(img.rows, img.cols, CV_8UC1, img.data);
+    cv::Mat res = tr::upsample(ocv_img, factor);
+
+    return trImage{.data = res.data, .rows = res.rows, .cols = res.cols};
 }
