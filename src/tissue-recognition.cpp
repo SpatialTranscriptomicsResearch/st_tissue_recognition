@@ -1,3 +1,4 @@
+#include <exception>
 #include <map>
 
 #include "tissue-recognition-opencv.hpp"
@@ -14,6 +15,10 @@ const std::map<int, int> cv_types{{trImage::UINT8C1, CV_8UC1},
 
 int tr_recognize_tissue(trImage img, trImage msk, trImage annot,
         bool init_msk, const trOptions& opt) {
+    if (img.cols != msk.cols || img.cols != annot.cols ||
+            img.rows != msk.rows || img.rows != annot.rows)
+        throw std::invalid_argument("Images do not have the same dimensions.");
+
     cv::Mat ocv_img(img.rows, img.cols, cv_types.at(img.data_type), img.data);
     cv::Mat ocv_msk(msk.rows, msk.cols, cv_types.at(msk.data_type), msk.data);
     cv::Mat ocv_annot(annot.rows, annot.cols, cv_types.at(annot.data_type),

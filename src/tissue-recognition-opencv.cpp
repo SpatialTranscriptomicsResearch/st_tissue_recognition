@@ -1,3 +1,5 @@
+#include <exception>
+
 #include "tissue-recognition-opencv.hpp"
 #include "util.hpp"
 
@@ -74,6 +76,8 @@ void init_msk(const Mat &img, Mat &msk) {
 }
 
 cv::Mat get_binary_mask(const cv::Mat &msk) {
+    if (msk.type() != CV_8UC1)
+        throw std::invalid_argument("Invalid data type.");
     return (msk == GC_FGD) | (msk == GC_PR_FGD);
 }
 
