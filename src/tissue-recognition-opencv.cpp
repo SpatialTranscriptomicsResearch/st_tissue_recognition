@@ -92,30 +92,22 @@ Mat upsample(const Mat &img, double factor) {
 }
 
 static void fill_fgd_holes(Mat &msk) {
-
   uint8_t flag_pr_bgd = 254, flag_bgd = 255;
 
   convert<uint8_t>(msk, std::map<uint8_t, uint8_t>{{GC_PR_BGD, flag_pr_bgd},
                                                    {GC_BGD, flag_bgd}});
 
-  for (int r = 0, c = 0, dr = 1, dc = 0; c >= 0; r += dr, c += dc) {
-    if (c == 0 && r == msk.rows - 1) {
-      dr = 0;
-      dc = 1;
-    }
-    if (c == msk.cols - 1 && r == msk.rows - 1) {
-      dr = -1;
-      dc = 0;
-    }
-    if (c == msk.cols - 1 && r == 0) {
-      dr = 0;
-      dc = -1;
-    }
-
+  auto _fill = [&](int r, int c) {
     fill<uint8_t>(msk, std::map<uint8_t, uint8_t>{{flag_pr_bgd, GC_PR_BGD},
                                                   {flag_bgd, GC_BGD}},
                   r, c);
-  }
+  };
+  for (int r : std::vector<int>{0, msk.rows - 1})
+    for (int c = 0; c < msk.cols; ++c)
+      _fill(r, c);
+  for (int c : std::vector<int>{0, msk.cols - 1})
+    for (int r = 1; r < msk.rows - 1; ++r)
+      _fill(r, c);
 
   convert<uint8_t>(msk, std::map<uint8_t, uint8_t>{{flag_pr_bgd, GC_PR_FGD},
                                                    {flag_bgd, GC_PR_FGD}});
