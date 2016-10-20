@@ -1,7 +1,7 @@
 Installation
 ------------
 ### Main library
-```
+```sh
 mkdir build
 cd build
 cmake ..
@@ -9,7 +9,7 @@ make install
 ```
 
 ### Python module
-```
+```sh
 cd python-module
 python3.5 setup.py
 ```
