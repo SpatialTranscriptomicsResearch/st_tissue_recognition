@@ -20,7 +20,7 @@ DEF_DIFF_THRESHOLD = utils.get_val(LIB_HANDLE.TR_DEF_DIFF_THRESHOLD,
 
 
 class Image(ct.Structure):
-    """Corresponds to the trImage struct in the c-header"""
+    """Corresponds to the trImage struct in the c header"""
 
     _fields_ = [("data", ct.POINTER(ct.c_uint8)),
                 ("rows", ct.c_int),
@@ -40,7 +40,7 @@ class Image(ct.Structure):
 
 
 class Options(ct.Structure):
-    """Corresponds to the trOptions struct in the c-header"""
+    """Corresponds to the trOptions struct in the c header"""
 
     _fields_ = [("iteration_max", ct.c_int),
                 ("threshold_diff", ct.c_double),
@@ -75,7 +75,7 @@ FREE.restype = None
 
 def recognize_tissue(img, mask, annotations, init_mask=True, options=None):
     """
-    Runs the recognize_tissue method declared in the c-header.
+    Runs the recognize_tissue method declared in the c header.
 
     Arguments:
     ----------

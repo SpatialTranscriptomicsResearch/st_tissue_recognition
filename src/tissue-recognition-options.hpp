@@ -1,7 +1,9 @@
 #ifndef TISSUE_RECOGNITION_OPTIONS_HPP
 #define TISSUE_RECOGNITION_OPTIONS_HPP
 
-#define uchar unsigned char
+#include <cstdint>
+
+#define uchar uint8_t
 
 extern const int TR_DEF_MAX_ITERATIONS = 3;
 extern const double TR_DEF_DIFF_THRESHOLD = 0.001;

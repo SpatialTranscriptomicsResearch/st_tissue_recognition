@@ -1,8 +1,6 @@
 #ifndef TISSUE_RECOGNITION_HPP
 #define TISSUE_RECOGNITION_HPP
 
-#define uchar unsigned char
-
 #include "tissue-recognition-options.hpp"
 
 #ifdef __cplusplus
