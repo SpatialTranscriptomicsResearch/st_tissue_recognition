@@ -31,10 +31,7 @@ trImage tr_get_binary_mask(trImage msk) {
     cv::Mat ocv_msk(msk.rows, msk.cols, cv_types.at(msk.data_type), msk.data);
     cv::Mat bin_msk = tr::get_binary_mask(ocv_msk);
 
-    trImage ret{.data = bin_msk.data,
-                .data_type = trImage::UINT8C1,
-                .rows = bin_msk.rows,
-                .cols = bin_msk.cols};
+    trImage ret{bin_msk.data, trImage::UINT8C1, bin_msk.rows, bin_msk.cols};
     in_memory[ret.data] = bin_msk;
 
     return ret;
@@ -44,10 +41,7 @@ trImage tr_downsample(trImage img, double factor) {
     cv::Mat ocv_img(img.rows, img.cols, cv_types.at(img.data_type), img.data);
     cv::Mat res = tr::downsample(ocv_img, factor);
 
-    trImage ret{.data = res.data,
-                .data_type = trImage::UINT8C3,
-                .rows = res.rows,
-                .cols = res.cols};
+    trImage ret{res.data, trImage::UINT8C3, res.rows, res.cols};
     in_memory[ret.data] = res;
 
     return ret;
@@ -56,10 +50,7 @@ trImage tr_upsample(trImage img, double factor) {
     cv::Mat ocv_img(img.rows, img.cols, cv_types.at(img.data_type), img.data);
     cv::Mat res = tr::upsample(ocv_img, factor);
 
-    trImage ret{.data = res.data,
-                .data_type = trImage::UINT8C3,
-                .rows = res.rows,
-                .cols = res.cols};
+    trImage ret{res.data, trImage::UINT8C3, res.rows, res.cols};
     in_memory[ret.data] = res;
 
     return ret;
