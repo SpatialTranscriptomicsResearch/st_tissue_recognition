@@ -7,10 +7,10 @@ from . import utils
 
 
 LIB_FILE = ctu.find_library("tissue-recognition")
-LIB_HANDLE = ct.cdll.LoadLibrary(LIB_FILE)
+if LIB_FILE is None:
+    raise ImportError("Could not find libtissue-recognition.so")
 
-if LIB_HANDLE is None:
-    raise ImportError("Unable to import libtissue-recognition.so")
+LIB_HANDLE = ct.cdll.LoadLibrary(LIB_FILE)
 
 DEF_MAX_ITER = utils.get_val(LIB_HANDLE.TR_DEF_MAX_ITERATIONS, ct.c_int)
 DEF_SIZE_THRESHOLD = utils.get_val(LIB_HANDLE.TR_DEF_SIZE_THRESHOLD,
