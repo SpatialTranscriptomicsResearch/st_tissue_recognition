@@ -9,11 +9,15 @@
 // called.
 std::map<uchar*, cv::Mat> in_memory;
 
+const std::map<int, int> cv_types{{trImage::UINT8C1, CV_8UC1},
+                                  {trImage::UINT8C3, CV_8UC3}};
+
 int tr_recognize_tissue(trImage img, trImage msk, trImage annot,
         bool init_msk, const trOptions& opt) {
-    cv::Mat ocv_img(img.rows, img.cols, CV_8UC3, img.data);
-    cv::Mat ocv_msk(msk.rows, msk.cols, CV_8UC1, msk.data);
-    cv::Mat ocv_annot(annot.rows, annot.cols, CV_8UC1, annot.data);
+    cv::Mat ocv_img(img.rows, img.cols, cv_types.at(img.data_type), img.data);
+    cv::Mat ocv_msk(msk.rows, msk.cols, cv_types.at(msk.data_type), msk.data);
+    cv::Mat ocv_annot(annot.rows, annot.cols, cv_types.at(annot.data_type),
+                      annot.data);
 
     if(init_msk)
         tr::init_msk(ocv_img, ocv_msk);
@@ -24,32 +28,38 @@ int tr_recognize_tissue(trImage img, trImage msk, trImage annot,
 }
 
 trImage tr_get_binary_mask(trImage msk) {
-    cv::Mat ocv_msk(msk.rows, msk.cols, CV_8UC1, msk.data);
+    cv::Mat ocv_msk(msk.rows, msk.cols, cv_types.at(msk.data_type), msk.data);
     cv::Mat bin_msk = tr::get_binary_mask(ocv_msk);
 
-    trImage ret{
-        .data = bin_msk.data, .rows = bin_msk.rows, .cols = bin_msk.cols};
+    trImage ret{.data = bin_msk.data,
+                .data_type = trImage::UINT8C1,
+                .rows = bin_msk.rows,
+                .cols = bin_msk.cols};
     in_memory[ret.data] = bin_msk;
 
     return ret;
 }
 
 trImage tr_downsample(trImage img, double factor) {
-    cv::Mat ocv_img(img.rows, img.cols, CV_8UC1, img.data);
+    cv::Mat ocv_img(img.rows, img.cols, cv_types.at(img.data_type), img.data);
     cv::Mat res = tr::downsample(ocv_img, factor);
 
-    trImage ret{
-        .data = res.data, .rows = res.rows, .cols = res.cols};
+    trImage ret{.data = res.data,
+                .data_type = trImage::UINT8C3,
+                .rows = res.rows,
+                .cols = res.cols};
     in_memory[ret.data] = res;
 
     return ret;
 }
 trImage tr_upsample(trImage img, double factor) {
-    cv::Mat ocv_img(img.rows, img.cols, CV_8UC1, img.data);
+    cv::Mat ocv_img(img.rows, img.cols, cv_types.at(img.data_type), img.data);
     cv::Mat res = tr::upsample(ocv_img, factor);
 
-    trImage ret{
-        .data = res.data, .rows = res.rows, .cols = res.cols};
+    trImage ret{.data = res.data,
+                .data_type = trImage::UINT8C3,
+                .rows = res.rows,
+                .cols = res.cols};
     in_memory[ret.data] = res;
 
     return ret;

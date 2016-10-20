@@ -23,8 +23,11 @@ class Image(ct.Structure):
     """Corresponds to the trImage struct in the c header"""
 
     _fields_ = [("data", ct.POINTER(ct.c_uint8)),
+                ("data_type", ct.c_int),
                 ("rows", ct.c_int),
                 ("cols", ct.c_int)]
+
+    _dtype = {"UINT8C1": 0, "UINT8C3": 1}
 
     def __init__(self, img):
         """Initializes object from SciPy image"""
@@ -34,9 +37,25 @@ class Image(ct.Structure):
         if not img.data.c_contiguous:
             raise ValueError("Image data is non-contiguous")
 
+        dim = len(img.shape)
+        if dim == 2:
+            dtype = self._dtype["UINT8C1"]
+        elif dim == 3:
+            dtype = self._dtype["UINT8C3"]
+        else:
+            raise TypeError("Image has invalid number of dimensions ({})"
+                            .format(dim))
+
         super(Image, self).__init__(
             img.ctypes.data_as(ct.POINTER(ct.c_uint8)),
-            img.shape[0], img.shape[1])
+            dtype, img.shape[0], img.shape[1])
+
+    def to_array(self):
+        """Converts object to NumPy array"""
+        shape = (self.rows, self.cols)
+        if self.data_type == Image._dtype["UINT8C3"]:
+            shape = shape + (3,)
+        return np.ctypeslib.as_array(self.data, shape=shape)
 
 
 class Options(ct.Structure):
@@ -109,20 +128,17 @@ def recognize_tissue(img, mask, annotations, init_mask=True, options=None):
 
 def get_binary_mask(mask):
     """Runs the get_binary_mask method declared in the c header"""
-    res = BINARIZE(Image(mask))
-    return np.ctypeslib.as_array(res.data, shape=(res.rows, res.cols))
+    return BINARIZE(Image(mask)).to_array()
 
 
 def downsample(img, factor):
     """Runs the downsample method declared in the c header"""
-    res = DOWNSMPL(Image(img), factor)
-    return np.ctypeslib.as_array(res.data, shape=(res.rows, res.cols))
+    return DOWNSMPL(Image(img), factor).to_array()
 
 
 def upsample(img, factor):
     """Runs the upsample method declared in the c header"""
-    res = UPSMPL(Image(img), factor)
-    return np.ctypeslib.as_array(res.data, shape=(res.rows, res.cols))
+    return UPSMPL(Image(img), factor).to_array()
 
 
 def free(img):

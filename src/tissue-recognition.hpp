@@ -9,6 +9,7 @@ extern "C" {
 
 typedef struct trImage {
     uchar *data;
+    enum {UINT8C1 = 0, UINT8C3 = 1} data_type;
     int rows, cols;
 } trImage;
 
