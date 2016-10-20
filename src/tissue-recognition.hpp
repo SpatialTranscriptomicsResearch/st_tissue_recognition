@@ -14,13 +14,15 @@ typedef struct trImage {
     int rows, cols;
 } trImage;
 
-void tr_recognize_tissue(trImage img, trImage msk, trImage annotations,
+int tr_recognize_tissue(trImage img, trImage msk, trImage annotations,
         bool init_msk = false, const trOptions &opt = trOptions());
 
 trImage tr_get_binary_mask(trImage mask);
 
 trImage tr_downsample(trImage img, double factor);
 trImage tr_upsample(trImage img, double factor);
+
+int tr_free(trImage);
 
 #ifdef __cplusplus
 } // extern "C"
