@@ -8,13 +8,14 @@ extern "C" {
 #endif
 
 typedef struct trImage {
-    uchar *data;
-    enum {UINT8C1 = 0, UINT8C3 = 1} data_type;
-    int rows, cols;
+  uchar *data;
+  enum { UINT8C1 = 0, UINT8C3 = 1 } data_type;
+  int rows, cols;
 } trImage;
 
 int tr_recognize_tissue(trImage img, trImage msk, trImage annotations,
-        bool init_msk = false, const trOptions &opt = trOptions());
+                        bool init_msk = false,
+                        const trOptions &opt = trOptions());
 
 trImage tr_get_binary_mask(trImage mask);
 
