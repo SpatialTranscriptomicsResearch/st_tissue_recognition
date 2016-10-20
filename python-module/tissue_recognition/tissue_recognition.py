@@ -53,9 +53,24 @@ class Options(ct.Structure):
 
 
 RECOGNIZE = LIB_HANDLE.tr_recognize_tissue
-
 RECOGNIZE.argtypes = [Image, Image, Image, ct.c_bool, ct.POINTER(Options)]
 RECOGNIZE.restype = None
+
+BINARIZE = LIB_HANDLE.tr_get_binary_mask
+BINARIZE.argtypes = [Image]
+BINARIZE.restype = Image
+
+DOWNSMPL = LIB_HANDLE.tr_downsample
+DOWNSMPL.argtypes = [Image, ct.c_double]
+DOWNSMPL.restype = Image
+
+UPSMPL = LIB_HANDLE.tr_upsample
+UPSMPL.argtypes = [Image, ct.c_double]
+UPSMPL.restype = Image
+
+FREE = LIB_HANDLE.tr_free
+FREE.argtypes = [Image]
+FREE.restype = None
 
 
 def recognize_tissue(img, mask, annotations, init_mask=True, options=None):
@@ -91,7 +106,26 @@ def recognize_tissue(img, mask, annotations, init_mask=True, options=None):
 
     RECOGNIZE(img, mask, annotations, init_mask, ct.byref(options))
 
-    return mask
+
+def get_binary_mask(mask):
+    """Runs the get_binary_mask method declared in the c header"""
+    res = BINARIZE(Image(mask))
+    return np.ctypeslib.as_array(res.data, shape=(res.rows, res.cols))
 
 
-# TODO: Implement interfaces for get_binary_mask and down-/upsample
+def downsample(img, factor):
+    """Runs the downsample method declared in the c header"""
+    res = DOWNSMPL(Image(img), factor)
+    return np.ctypeslib.as_array(res.data, shape=(res.rows, res.cols))
+
+
+def upsample(img, factor):
+    """Runs the upsample method declared in the c header"""
+    res = UPSMPL(Image(img), factor)
+    return np.ctypeslib.as_array(res.data, shape=(res.rows, res.cols))
+
+
+def free(img):
+    """Frees the memory allocated by get_binary_mask, downsample, and
+    upsample"""
+    FREE(Image(img))
