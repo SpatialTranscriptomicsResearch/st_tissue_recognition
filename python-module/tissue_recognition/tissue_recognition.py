@@ -34,7 +34,7 @@ class Image(ct.Structure):
 
         if img.dtype != np.dtype("uint8"):
             raise TypeError("Image must be uint8 (is {})".format(img.dtype))
-        if not img.data.c_contiguous:
+        if not img.flags.c_contiguous:
             raise ValueError("Image data is non-contiguous")
 
         dim = len(img.shape)
