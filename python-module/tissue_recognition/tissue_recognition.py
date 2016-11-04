@@ -32,6 +32,10 @@ class Image(ct.Structure):
     def __init__(self, img):
         """Initializes object from SciPy image"""
 
+        if img is None:
+            super(Image, self).__init__(None, 0, 0, 0)
+            return
+
         if img.dtype != np.dtype("uint8"):
             raise TypeError("Image must be uint8 (is {})".format(img.dtype))
         if not img.flags.c_contiguous:
@@ -92,7 +96,8 @@ FREE.argtypes = [Image]
 FREE.restype = None
 
 
-def recognize_tissue(img, mask, annotations, init_mask=True, options=None):
+def recognize_tissue(img, mask, annotations=None, init_mask=True,
+                     options=None):
     """
     Runs the recognize_tissue method declared in the c header.
 
@@ -113,8 +118,10 @@ def recognize_tissue(img, mask, annotations, init_mask=True, options=None):
     if options is None:
         options = Options()
 
-    dims = [im.shape[0:2] for im in (img, mask, annotations)]
-    if [d[1:] == d[:-1] for d in zip(*dims)] != [1, 1]:
+    dims = [im.shape[0:2] for im in (
+        (img, mask, annotations) if annotations is not None else
+        (img, mask))]
+    if [d[1:] == d[:-1] for d in zip(*dims)] != [True, True]:
         raise ValueError("Images must have the same dimensions "
                          "(was given images with dimensions "
                          "{}, {}, and {})".format(*dims))

@@ -12,8 +12,8 @@ def main():
     opt = opt.parse_args()
 
     img = imread(opt.img_file)
-    msk, ann = [np.zeros(img.shape[0:2], dtype=np.uint8)]*2
-    tr.recognize_tissue(img, msk, ann)
+    msk = np.zeros(img.shape[0:2], dtype=np.uint8)
+    tr.recognize_tissue(img, msk)
     bin_msk = tr.get_binary_mask(msk)
     imshow(bin_msk)
     tr.free(bin_msk)
