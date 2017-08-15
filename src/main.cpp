@@ -82,6 +82,7 @@ int main(int argc, char **argv) {
       cout << "running recognize_tissue..." << endl;
       recognize_tissue(img, mask, drawing.annotations);
       cout << "done." << endl;
+      // fall through
     case 'c':
       drawing.points.clear();
       redraw(img, mask, &drawing);
@@ -125,6 +126,7 @@ static void mouse_callback(int event, int c, int r, int flags, void *_drawing) {
   switch (event) {
   case EVENT_LBUTTONDOWN:
     drawing->active = true;
+    // fall through
 
   case EVENT_MOUSEMOVE:
     if (drawing->active) {
