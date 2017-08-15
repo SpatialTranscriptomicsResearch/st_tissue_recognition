@@ -12,11 +12,26 @@ bindings.
 
 Dependencies
 ------------
-### Main library
+### <a name="dep-main"></a>Main library
+```
+CMake 2.8+
 OpenCV 3.1.0+
+```
 
-### Python module
-Python 2.7+ *or* Python 3.5+, numpy 1.11.1+, setuptools 20.1.1+
+### <a name="dep-python"></a>Python module
+In addition to the [main library](#dep-main),
+```
+Python 2.7+ *or* Python 3.5+
+numpy 1.11.1+
+setuptools 20.1.1+
+```
+
+### Python module example
+In addition to the [python module](#dep-python),
+```
+Pillow 4.1.0+
+scipy 0.19.0+
+```
 
 Installation
 ------------
