@@ -15,12 +15,12 @@ using namespace std;
 using namespace tr;
 
 static void help() {
-  cout << "\nThis program tries to infer tissue and surrounding in images of "
+  cout << "This program tries to infer tissue and surrounding in images of "
           "HE-stained tissues on micro-arrays.\n"
           "Usage:\n"
           "tissue-recognition <image_name> [<scale>], default is scale = "
-          "1.0\n" GIT_DESCRIPTION
-       << "\n"
+          "1.0\n\n"
+          "Version: " GIT_DESCRIPTION
        << endl;
 }
 
