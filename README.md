@@ -67,3 +67,32 @@ See ```./python-module/example.py``` for example usage.
 
 *Note*: Remember to free the return values of ```get_binary_mask```,
     ```downsample```, and ```upsample``` using ```free```.
+
+Troubleshooting
+---------------
+### Python module import error
+**OSError: libtissue-recognition.so: cannot open shared object file: No such
+file or directory**.
+
+The linker cannot find the object file of the library.
+Thus, you may need to add the dirname of the object file to the search path of
+the linker.
+If you configured the installation using `cmake ..`, as in the installation
+instructions, the object file should be located in `/usr/local/lib`.
+
+If you're using ld/GNU linker, you can try running
+
+```sh
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+```
+
+and import the module again.
+To make the change permanent, either add the above command to the startup script
+of your shell (e.g., `~/.bashrc`) or, perhaps better, add the library path to
+the ld config file:
+
+```sh
+[[ ! -e /etc/ld.so.conf.d/local.conf ]] && \
+  echo "/usr/local/lib" | sudo tee /etc/ld.so.conf.d/local.conf >/dev/null && \
+  sudo ldconfig
+```
