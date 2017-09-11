@@ -41,6 +41,11 @@ typedef struct Drawing {
   vector<pair<Point, int>> points;
 } Drawing;
 
+// splits filename into its dirname and basename
+static pair<string, string> path(const string& filename);
+// splits string on given character
+static pair<string, string> split_on(char x, const string& xs);
+
 static void draw_point(Point p, int type, Drawing *drawing);
 static void redraw(Mat &img, Mat &mask, Drawing *drawing);
 
@@ -90,7 +95,8 @@ int main(int argc, char **argv) {
     case 's': {
       cout << "upsampling and binarizing mask..." << endl;
       Mat _mask = get_binary_mask(tr::upsample(mask, 1 / scale));
-      string filename_out = "mask_" + filename;
+      auto [dirname, basename] = path(filename);
+      string filename_out = dirname + "mask_" + basename;
       cout << "writing mask to " << filename_out << endl;
       imwrite(filename_out, _mask);
       cout << "done." << endl;
@@ -103,6 +109,23 @@ int main(int argc, char **argv) {
 
 main_end:
   return EXIT_SUCCESS;
+}
+
+static pair<string, string> path(const string& filename) {
+  auto filename_ = filename;
+  reverse(filename_.begin(), filename_.end());
+  auto [basename, dirname] = split_on('/', filename_);
+  reverse(dirname.begin(), dirname.end());
+  reverse(basename.begin(), basename.end());
+  return { dirname, basename };
+}
+
+static pair<string, string> split_on(char x, const string& xs) {
+  size_t pos = xs.find(x);
+  if (pos == string::npos) {
+    return {xs, ""};
+  }
+  return { xs.substr(0, pos), xs.substr(pos) };
 }
 
 static void draw_point(Point p, int type, Drawing *drawing) {
