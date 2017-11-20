@@ -14,7 +14,8 @@ Dependencies
 ------------
 ### <a name="dep-main"></a>Main library
 ```
-CMake 2.8+
+gcc 7+
+CMake 3.8+
 OpenCV 3.1.0+
 ```
 
