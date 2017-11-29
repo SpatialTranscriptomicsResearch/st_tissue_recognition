@@ -1,4 +1,4 @@
-st_tissue_recognition
+ST Tissue Recognition
 =====================
 st_tissue_recognition is a tool for creating masks around tissue sections in
 brightfield images.
